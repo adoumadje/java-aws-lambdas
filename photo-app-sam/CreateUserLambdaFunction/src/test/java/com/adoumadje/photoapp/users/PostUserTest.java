@@ -9,7 +9,7 @@ import org.junit.Test;
 public class PostUserTest {
   @Test
   public void successfulResponse() {
-    PostUser postUser = new PostUser();
+    PostUserHandler postUser = new PostUserHandler();
     APIGatewayProxyResponseEvent result = postUser.handleRequest(null, null);
     assertEquals(200, result.getStatusCode().intValue());
     assertEquals("application/json", result.getHeaders().get("Content-Type"));

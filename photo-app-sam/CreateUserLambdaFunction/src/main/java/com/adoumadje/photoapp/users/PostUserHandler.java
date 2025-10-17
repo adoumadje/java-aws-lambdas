@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Handler for requests to Lambda function.
  */
-public class PostUser implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class PostUserHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
         String postDataJSON = input.getBody();
