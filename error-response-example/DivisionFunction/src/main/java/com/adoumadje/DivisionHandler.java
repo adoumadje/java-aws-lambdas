@@ -25,19 +25,30 @@ public class DivisionHandler implements RequestHandler<APIGatewayProxyRequestEve
         headers.put("Content-Type", "application/json");
 
         Map<String, String> params = input.getQueryStringParameters();
-
-        int dividend = Integer.parseInt(params.get("dividend"));
-        int divisor = Integer.parseInt(params.get("divisor"));
-
-        Division division = new Division();
-        division.setDividend(dividend);
-        division.setDivisor(divisor);
-        division.setResult(dividend / divisor);
-
-        Gson gson = new Gson();
-
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-        response.withHeaders(headers).withStatusCode(200).withBody(gson.toJson(division, Division.class));
+        response.setHeaders(headers);
+
+        try {
+            int dividend = Integer.parseInt(params.get("dividend"));
+            int divisor = Integer.parseInt(params.get("divisor"));
+            int result = dividend / divisor;
+
+            Division division = new Division();
+            division.setDividend(dividend);
+            division.setDivisor(divisor);
+            division.setResult(result);
+
+            Gson gson = new Gson();
+
+            response.withStatusCode(200).withBody(gson.toJson(division, Division.class));
+        } catch (ArithmeticException | NumberFormatException ex) {
+            String json = """
+                    {
+                        "message": "%S"
+                    }
+                    """.formatted(ex.getMessage());
+            response.withStatusCode(500).withBody(json);
+        }
 
         return response;
     }
