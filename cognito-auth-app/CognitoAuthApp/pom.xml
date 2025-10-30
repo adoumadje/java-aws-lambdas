@@ -22,6 +22,38 @@
           <artifactId>aws-lambda-java-events</artifactId>
           <version>3.11.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-cognitoidentity -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-cognitoidentity</artifactId>
+            <version>1.12.793</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/cognitoidentityprovider -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>cognitoidentityprovider</artifactId>
+            <version>2.36.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/apache-client -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+            <version>2.36.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-kms -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-kms</artifactId>
+            <version>1.12.793</version>
+        </dependency>
+
         <dependency>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
