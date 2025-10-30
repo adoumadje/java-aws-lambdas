@@ -15,36 +15,37 @@ Globals:
     LoggingConfig:
       LogFormat: JSON
 Resources:
-  HelloWorldFunction:
+  EnvironmentFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: HelloWorldFunction
-      Handler: helloworld.App::handleRequest
+      CodeUri: EnvironmentFunction
+      Handler: com.adoumadje.EnvironmentHandler::handleRequest
       Runtime: java17
       Architectures:
       - x86_64
       MemorySize: 512
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          PARAM1: VALUE
+          MY_VARIABLE_1: AQICAHjZ7+SVtJ6RBiSK9XRmmQ/yQyuvIYwk3wnc2DkPmjgZEwELbe5zH6Aka16ZLcrYs5YMAAAAbzBtBgkqhkiG9w0BBwagYDBeAgEAMFkGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMN5KlH3PgdZTkov1VAgEQgCyV6pOFiO4ZEAY7PrRGTg3ty3sCsbgqpUKSxMF7XNfRaks4R+iye3LVFYVrjw==
+          MY_VARIABLE_2: AQICAHjZ7+SVtJ6RBiSK9XRmmQ/yQyuvIYwk3wnc2DkPmjgZEwE6URCp8Jv0r5CmyXkL0qxpAAAAbzBtBgkqhkiG9w0BBwagYDBeAgEAMFkGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMGCAZfv8/lTzzBCqaAgEQgCzwL3TPjOFLpcY+RF+HosbaxRUePrMlH1UooLTJ+J/SNXyYJ7ZI9UUk3sD1Ww==
       Events:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
+            Path: /env
             Method: get
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
+  EnvironmentApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World 
       function
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/hello/"
-  HelloWorldFunction:
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/env/"
+  EnvironmentFunction:
     Description: Hello World Lambda Function ARN
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
+    Value: !GetAtt EnvironmentFunction.Arn
+  EnvironmentFunctionIamRole:
     Description: Implicit IAM Role created for Hello World function
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt EnvironmentFunctionRole.Arn
