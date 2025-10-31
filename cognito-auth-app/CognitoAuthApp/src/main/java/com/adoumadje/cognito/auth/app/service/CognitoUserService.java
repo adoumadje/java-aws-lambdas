@@ -37,7 +37,7 @@ public class CognitoUserService {
                 .name("custom:userId").value(userId).build();
 
         AttributeType fullNameAttribute = AttributeType.builder()
-                .name("custom:fullName").value(firstName + " " + lastName).build();
+                .name("custom:fullName").value(firstName).build();
 
         AttributeType emailAttribute = AttributeType.builder()
                 .name("email").value(email).build();
