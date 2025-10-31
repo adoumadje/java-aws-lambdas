@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.adoumadje.cognito.auth.app.service.CognitoUserService;
+import com.adoumadje.cognito.auth.app.shared.ErrorResponse;
 import com.adoumadje.cognito.auth.app.utils.CryptoUtils;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
@@ -13,6 +14,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import software.amazon.awssdk.awscore.exception.AwsServiceException;
 
 /**
  * Handler for requests to Lambda function.
@@ -46,10 +48,23 @@ public class SignUpHandler implements RequestHandler<APIGatewayProxyRequestEvent
         LambdaLogger logger = context.getLogger();
         logger.log("Original data: " + requestBody);
 
-        JsonObject userDetails = JsonParser.parseString(requestBody).getAsJsonObject();
+        try {
+            JsonObject userDetails = JsonParser.parseString(requestBody).getAsJsonObject();
 
-        JsonObject createdUser = cognitoUserService.registerUser(userDetails, appClientId, appClientSecret);
-        response.withStatusCode(200).withBody(new Gson().toJson(createdUser, JsonObject.class));
+            JsonObject createdUser = cognitoUserService.registerUser(userDetails, appClientId, appClientSecret);
+            response.withStatusCode(200).withBody(new Gson().toJson(createdUser, JsonObject.class));
+
+        } catch (AwsServiceException ex) {
+            logger.log(ex.awsErrorDetails().errorMessage());
+            ErrorResponse error = new ErrorResponse(ex.awsErrorDetails().errorMessage());
+            String errorJSON = new Gson().toJson(error, ErrorResponse.class);
+            response.withStatusCode(ex.statusCode()).withBody(errorJSON);
+        } catch (Exception ex) {
+            logger.log(ex.getMessage());
+            ErrorResponse error = new ErrorResponse(ex.getMessage());
+            String errorJSON = new Gson().toJson(error, ErrorResponse.class);
+            response.withStatusCode(500).withBody(errorJSON);
+        }
 
         return response;
     }
