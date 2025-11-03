@@ -1,4 +1,4 @@
-package com.adoumadje.cognito.auth.app.shared;
+package com.adoumadje.cognito.auth.app.constants;
 
 public class Constants {
     public static final String COGNITO_USER_ID="cognitoUserId";

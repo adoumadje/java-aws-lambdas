@@ -1,15 +1,14 @@
 package com.adoumadje.cognito.auth.app.service;
 
-import com.adoumadje.cognito.auth.app.shared.Constants;
+import com.adoumadje.cognito.auth.app.constants.AuthParams;
+import com.adoumadje.cognito.auth.app.constants.Constants;
 import com.adoumadje.cognito.auth.app.utils.CryptoUtils;
 import com.google.gson.JsonObject;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CognitoUserService {
     private final CognitoIdentityProviderClient cognitoIdentityProviderClient;
@@ -89,5 +88,35 @@ public class CognitoUserService {
 
         return confirmationResult;
 
+    }
+
+    public JsonObject loginUser(JsonObject loginDetails, String appClientID, String appClientSecret) {
+        String email = loginDetails.get("email").getAsString();
+        String password = loginDetails.get("password").getAsString();
+
+        String generatedSecretHash = CryptoUtils.calculateSecretHash(appClientID, appClientSecret, email);
+
+        Map<String, String> authParams = new HashMap<>();
+        authParams.put(AuthParams.USERNAME, email);
+        authParams.put(AuthParams.PASSWORD, password);
+        authParams.put(AuthParams.SECRET_HASH, generatedSecretHash);
+
+        InitiateAuthRequest initiateAuthRequest = InitiateAuthRequest.builder()
+                .clientId(appClientID)
+                .authFlow(AuthFlowType.USER_PASSWORD_AUTH)
+                .authParameters(authParams).build();
+
+        InitiateAuthResponse initiateAuthResponse = cognitoIdentityProviderClient.initiateAuth(initiateAuthRequest);
+        AuthenticationResultType authenticationResultType = initiateAuthResponse.authenticationResult();
+
+        JsonObject loginResult = new JsonObject();
+
+        loginResult.addProperty(Constants.IS_SUCCESSFUL, initiateAuthResponse.sdkHttpResponse().isSuccessful());
+        loginResult.addProperty(Constants.STATUS_CODE, initiateAuthResponse.sdkHttpResponse().statusCode());
+        loginResult.addProperty(AuthParams.ID_TOKEN, authenticationResultType.idToken());
+        loginResult.addProperty(AuthParams.ACCESS_TOKEN, authenticationResultType.accessToken());
+        loginResult.addProperty(AuthParams.REFRESH_TOKEN, authenticationResultType.refreshToken());
+
+        return loginResult;
     }
 }
