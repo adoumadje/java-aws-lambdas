@@ -113,10 +113,31 @@ public class CognitoUserService {
 
         loginResult.addProperty(Constants.IS_SUCCESSFUL, initiateAuthResponse.sdkHttpResponse().isSuccessful());
         loginResult.addProperty(Constants.STATUS_CODE, initiateAuthResponse.sdkHttpResponse().statusCode());
+
         loginResult.addProperty(AuthParams.ID_TOKEN, authenticationResultType.idToken());
         loginResult.addProperty(AuthParams.ACCESS_TOKEN, authenticationResultType.accessToken());
         loginResult.addProperty(AuthParams.REFRESH_TOKEN, authenticationResultType.refreshToken());
 
         return loginResult;
+    }
+
+    public JsonObject addUserToGroup(JsonObject groupDetails, String userPoolID) {
+        String email = groupDetails.get("email").getAsString();
+        String groupName = groupDetails.get("groupName").getAsString();
+
+        AdminAddUserToGroupRequest adminAddUserToGroupRequest = AdminAddUserToGroupRequest.builder()
+                .groupName(groupName)
+                .username(email)
+                .userPoolId(userPoolID).build();
+
+        AdminAddUserToGroupResponse adminAddUserToGroupResponse = cognitoIdentityProviderClient
+                .adminAddUserToGroup(adminAddUserToGroupRequest);
+
+        JsonObject addUserResult = new JsonObject();
+
+        addUserResult.addProperty(Constants.IS_SUCCESSFUL, adminAddUserToGroupResponse.sdkHttpResponse().isSuccessful());
+        addUserResult.addProperty(Constants.STATUS_CODE, adminAddUserToGroupResponse.sdkHttpResponse().statusCode());
+
+        return addUserResult;
     }
 }

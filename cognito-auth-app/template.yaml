@@ -17,6 +17,7 @@ Globals:
       Variables:
         MY_COGNITO_CLIENT_APP_ID: AQICAHjZ7+SVtJ6RBiSK9XRmmQ/yQyuvIYwk3wnc2DkPmjgZEwF4YGnz/lxEZ2Jr4ZuSMknGAAAAeDB2BgkqhkiG9w0BBwagaTBnAgEAMGIGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMWHoDfBoObQWR+B1IAgEQgDVZ2kmPynBCdyxlN/4k/NaS1Oo1Rp/zFa26EKydBQERrHTHX0wpZPK12vMsWtVySDERu/VM+A==
         MY_COGNITO_CLIENT_APP_SECRET: AQICAHjZ7+SVtJ6RBiSK9XRmmQ/yQyuvIYwk3wnc2DkPmjgZEwGrnRGxq0BPiAqCXaYhmOgBAAAAlTCBkgYJKoZIhvcNAQcGoIGEMIGBAgEAMHwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMna6eJ8Cduug9EBkZAgEQgE9+DgmUqcXXOAyTaBH6KyNRaFQ0QePBBjHB7dP69rNmFibaI5FsS/GUM4ge18kl7GLSrn3E/ZI9Q0myyUiRB7s69aOYLmmH1CkxLSDVldL7
+        MY_COGNITO_USER_POOL_ID: AQICAHjZ7+SVtJ6RBiSK9XRmmQ/yQyuvIYwk3wnc2DkPmjgZEwGQfsjrv1hnauPnImieK6QfAAAAcjBwBgkqhkiG9w0BBwagYzBhAgEAMFwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM5Ta0bKYEUqqyDBZoAgEQgC/s8tEGRcRC7XQCOZx7x5EA3/2Dl8oKCokWJCa9piaDuL5Lb3WjM/GhlBwhIf4Jfw==
 
 Resources:
   CognitoSignUpFunction:
@@ -41,6 +42,30 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /confirm-user
+            Method: post
+
+  CognitoUserLoginFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: CognitoAuthApp
+      Handler: com.adoumadje.cognito.auth.app.controller.LoginHandler::handleRequest
+      Events:
+        Login:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /login
+            Method: post
+
+  CognitoAddUserToGroupFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: CognitoAuthApp
+      Handler: com.adoumadje.cognito.auth.app.controller.AddUserToGroupHandler::handleRequest
+      Events:
+        AddUserToGroup:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /add-user-to-group
             Method: post
 
 Outputs:
