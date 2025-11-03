@@ -25,10 +25,22 @@ Resources:
       CodeUri: CognitoAuthApp
       Handler: com.adoumadje.cognito.auth.app.controller.SignUpHandler::handleRequest
       Events:
-        HelloWorld:
+        SignUp:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /sign-up
+            Method: post
+
+  CognitoConfirmUserFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: CognitoAuthApp
+      Handler: com.adoumadje.cognito.auth.app.controller.ConfirmUserHandler::handleRequest
+      Events:
+        ConfirmUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /confirm-user
             Method: post
 
 Outputs:

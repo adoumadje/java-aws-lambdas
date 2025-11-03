@@ -5,9 +5,7 @@ import com.adoumadje.cognito.auth.app.utils.CryptoUtils;
 import com.google.gson.JsonObject;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,5 +65,29 @@ public class CognitoUserService {
         createdUser.addProperty(Constants.IS_CONFIRM, signUpResponse.userConfirmed());
 
         return createdUser;
+    }
+
+    public JsonObject confirmUser(JsonObject confirmationDetails, String appClientID, String appClientSecret) {
+        String email = confirmationDetails.get("email").getAsString();
+        String code = confirmationDetails.get("code").getAsString();
+
+        String generatedSecretHash = CryptoUtils.calculateSecretHash(appClientID, appClientSecret, email);
+
+        ConfirmSignUpRequest confirmSignUpRequest = ConfirmSignUpRequest.builder()
+                .clientId(appClientID)
+                .secretHash(generatedSecretHash)
+                .username(email)
+                .confirmationCode(code)
+                .build();
+
+        ConfirmSignUpResponse confirmSignUpResponse = cognitoIdentityProviderClient.confirmSignUp(confirmSignUpRequest);
+
+        JsonObject confirmationResult = new JsonObject();
+
+        confirmationResult.addProperty(Constants.IS_SUCCESSFUL, confirmSignUpResponse.sdkHttpResponse().isSuccessful());
+        confirmationResult.addProperty(Constants.STATUS_CODE, confirmSignUpResponse.sdkHttpResponse().statusCode());
+
+        return confirmationResult;
+
     }
 }
