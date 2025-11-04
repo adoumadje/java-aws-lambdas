@@ -36,7 +36,9 @@ public class AddUserToGroupHandler implements RequestHandler<APIGatewayProxyRequ
 
         try {
             String requestBody = input.getBody();
+            String username = input.getPathParameters().get("username");
             JsonObject groupDetails = JsonParser.parseString(requestBody).getAsJsonObject();
+            groupDetails.addProperty("username", username);
             JsonObject addUserResult = cognitoUserService.addUserToGroup(groupDetails, userPoolID);
             response.withStatusCode(200).withBody(gson.toJson(addUserResult));
         } catch (AwsServiceException ex) {

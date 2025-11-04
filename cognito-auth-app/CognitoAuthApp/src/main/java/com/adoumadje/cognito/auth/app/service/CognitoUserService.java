@@ -122,12 +122,12 @@ public class CognitoUserService {
     }
 
     public JsonObject addUserToGroup(JsonObject groupDetails, String userPoolID) {
-        String email = groupDetails.get("email").getAsString();
+        String username = groupDetails.get("username").getAsString();
         String groupName = groupDetails.get("groupName").getAsString();
 
         AdminAddUserToGroupRequest adminAddUserToGroupRequest = AdminAddUserToGroupRequest.builder()
                 .groupName(groupName)
-                .username(email)
+                .username(username)
                 .userPoolId(userPoolID).build();
 
         AdminAddUserToGroupResponse adminAddUserToGroupResponse = cognitoIdentityProviderClient
