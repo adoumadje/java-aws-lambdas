@@ -140,4 +140,20 @@ public class CognitoUserService {
 
         return addUserResult;
     }
+
+    public JsonObject getUser(String accessToken) {
+        GetUserRequest getUserRequest = GetUserRequest.builder()
+                .accessToken(accessToken).build();
+        GetUserResponse getUserResponse = cognitoIdentityProviderClient.getUser(getUserRequest);
+
+        JsonObject requestResult = new JsonObject();
+        requestResult.addProperty(Constants.IS_SUCCESSFUL, getUserResponse.sdkHttpResponse().isSuccessful());
+        requestResult.addProperty(Constants.STATUS_CODE, getUserResponse.sdkHttpResponse().statusCode());
+
+        JsonObject userDetails = new JsonObject();
+        getUserResponse.userAttributes().forEach(attribute ->
+                userDetails.addProperty(attribute.name(), attribute.value()));
+        requestResult.add("user", userDetails);
+        return requestResult;
+    }
 }
