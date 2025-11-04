@@ -30,7 +30,7 @@ public class GetUserHandler implements RequestHandler<APIGatewayProxyRequestEven
         Gson gson = new Gson();
 
         try {
-            String accessToken = input.getHeaders().get("AccessToken");
+            String accessToken = input.getHeaders().get("Access-Token");
             JsonObject requestResult = cognitoUserService.getUser(accessToken);
             response.withStatusCode(200).withBody(gson.toJson(requestResult));
         } catch (AwsServiceException ex) {
