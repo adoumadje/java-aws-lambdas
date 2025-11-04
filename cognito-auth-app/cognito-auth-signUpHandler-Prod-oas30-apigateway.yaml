@@ -1,0 +1,76 @@
+openapi: "3.0.1"
+info:
+  title: "cognito-auth-signUpHandler"
+  version: "1.0"
+servers:
+- url: "https://0emlf7tlpf.execute-api.eu-north-1.amazonaws.com/{basePath}"
+  variables:
+    basePath:
+      default: "Prod"
+paths:
+  /users/{username}/add-to-group:
+    post:
+      parameters:
+      - name: "username"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-north-1:590183762752:function:cognito-auth-signUpHandle-CognitoAddUserToGroupFun-fICPOorGXnH7/invocations"
+        httpMethod: "POST"
+        passthroughBehavior: "when_no_match"
+        type: "aws_proxy"
+  /sign-up:
+    post:
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-north-1:590183762752:function:cognito-auth-signUpHandler-CognitoSignUpFunction-YZV3ePWyO4Mz/invocations"
+        httpMethod: "POST"
+        passthroughBehavior: "when_no_match"
+        type: "aws_proxy"
+  /login:
+    post:
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-north-1:590183762752:function:cognito-auth-signUpHandle-CognitoUserLoginFunction-RKlpWHHOOpXh/invocations"
+        httpMethod: "POST"
+        passthroughBehavior: "when_no_match"
+        type: "aws_proxy"
+  /users/me:
+    get:
+      parameters:
+      - name: "Access-Token"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      security:
+      - cognito-auth-app-authorizer: []
+      x-amazon-apigateway-request-validator: "Validate query string parameters and\
+        \ headers"
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-north-1:590183762752:function:cognito-auth-signUpHandler-CognitoGetUserFunction-CTQLE6W9q0ir/invocations"
+        httpMethod: "POST"
+        passthroughBehavior: "when_no_match"
+        type: "aws_proxy"
+  /confirm-user:
+    post:
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-north-1:590183762752:function:cognito-auth-signUpHandle-CognitoConfirmUserFuncti-7t5IzCd7xCCb/invocations"
+        httpMethod: "POST"
+        passthroughBehavior: "when_no_match"
+        type: "aws_proxy"
+components:
+  securitySchemes:
+    cognito-auth-app-authorizer:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "cognito_user_pools"
+      x-amazon-apigateway-authorizer:
+        providerARNs:
+        - "arn:aws:cognito-idp:eu-north-1:590183762752:userpool/eu-north-1_JGkmBik4m"
+        type: "cognito_user_pools"
+x-amazon-apigateway-request-validators:
+  Validate query string parameters and headers:
+    validateRequestParameters: true
+    validateRequestBody: false

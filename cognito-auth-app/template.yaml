@@ -20,6 +20,16 @@ Globals:
         MY_COGNITO_USER_POOL_ID: AQICAHjZ7+SVtJ6RBiSK9XRmmQ/yQyuvIYwk3wnc2DkPmjgZEwGQfsjrv1hnauPnImieK6QfAAAAcjBwBgkqhkiG9w0BBwagYzBhAgEAMFwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM5Ta0bKYEUqqyDBZoAgEQgC/s8tEGRcRC7XQCOZx7x5EA3/2Dl8oKCokWJCa9piaDuL5Lb3WjM/GhlBwhIf4Jfw==
 
 Resources:
+  ApplicationRestAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: cognito-auth-signUpHandler-Prod-oas30-apigateway.yaml
+
   CognitoSignUpFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -31,6 +41,8 @@ Resources:
           Properties:
             Path: /sign-up
             Method: post
+            RestApiId:
+              Ref: ApplicationRestAPI
 
   CognitoConfirmUserFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -43,6 +55,8 @@ Resources:
           Properties:
             Path: /confirm-user
             Method: post
+            RestApiId:
+              Ref: ApplicationRestAPI
 
   CognitoUserLoginFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -55,6 +69,8 @@ Resources:
           Properties:
             Path: /login
             Method: post
+            RestApiId:
+              Ref: ApplicationRestAPI
 
   CognitoAddUserToGroupFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -74,6 +90,8 @@ Resources:
           Properties:
             Path: /users/{username}/add-to-group
             Method: post
+            RestApiId:
+              Ref: ApplicationRestAPI
 
   CognitoGetUserFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -86,6 +104,8 @@ Resources:
           Properties:
             Path: /users/me
             Method: get
+            RestApiId:
+              Ref: ApplicationRestAPI
 
 
 Outputs:
@@ -94,7 +114,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   CreateUserApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/sign-up/"
+    Value: !Sub "https://${ApplicationRestAPI}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/sign-up/"
   CognitoSignUpFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt CognitoSignUpFunction.Arn
