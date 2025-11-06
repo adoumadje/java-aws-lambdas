@@ -22,7 +22,7 @@ public class Statement {
     }
 
 
-    public Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
