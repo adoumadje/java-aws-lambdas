@@ -2,6 +2,7 @@ package com.adoumadje.authorizer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Getter;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class PolicyDocument {
         return new Builder();
     }
 
+    @JsonPOJOBuilder(withPrefix = "")
     public static final class Builder {
         private String version;
         private List<Statement> statements;

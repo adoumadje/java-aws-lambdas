@@ -3,6 +3,7 @@ package com.adoumadje.authorizer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Getter;
 
 @Getter
@@ -26,6 +27,7 @@ public class Statement {
         return new Builder();
     }
 
+    @JsonPOJOBuilder(withPrefix = "")
     public final static class Builder {
         private String action;
         private String effect;
