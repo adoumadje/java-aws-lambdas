@@ -15,10 +15,19 @@ Globals:
     MemorySize: 512
     Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
       Variables:
-        COGNITO_USER_POOL_ID: VALUE
-        COGNITO_APP_CLIENT_ID:
+        COGNITO_USER_POOL_ID: eu-north-1_JGkmBik4m
+        COGNITO_APP_CLIENT_ID: 2volov80k02425pvkjl8skdlds
 
 Resources:
+  AppRestAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: open-api.yaml
 
   LambdaAuthorizerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -37,6 +46,8 @@ Resources:
           Properties:
             Path: /users/{username}
             Method: get
+            RestApiId:
+              Ref: AppRestAPI
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -44,7 +55,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   LambdaAuthorizerApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
+    Value: !Sub "https://${AppRestAPI}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
   GetUserByUsernameFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt GetUserByUsernameFunction.Arn
