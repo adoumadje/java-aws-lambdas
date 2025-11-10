@@ -37,7 +37,7 @@ public class LambdaAuthorizerFunction implements RequestHandler<APIGatewayProxyR
 
         APIGatewayProxyRequestEvent.ProxyRequestContext proxyRequestContext = input.getRequestContext();
 
-        String arn = String.format("arn:aws:excute-api:%s:%s:%s/%s/%s/%s",
+        String arn = String.format("arn:aws:execute-api:%s:%s:%s/%s/%s/%s",
                 region,
                 proxyRequestContext.getAccountId(),
                 proxyRequestContext.getApiId(),
