@@ -6,19 +6,18 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @JsonDeserialize(builder = PolicyDocument.Builder.class)
 public class PolicyDocument {
     @JsonProperty("Version")
-    private String version;
+    private String Version;
     @JsonProperty("Statement")
-    private List<Statement> statements;
+    private List<Statement> Statement;
 
     public PolicyDocument(Builder builder) {
-        this.version = builder.version;
-        this.statements = builder.statements;
+        this.Version = builder.version;
+        this.Statement = builder.statements;
     }
 
     public static Builder builder() {

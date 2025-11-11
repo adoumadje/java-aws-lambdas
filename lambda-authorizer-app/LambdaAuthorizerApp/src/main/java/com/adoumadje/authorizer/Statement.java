@@ -10,16 +10,16 @@ import lombok.Getter;
 @JsonDeserialize(builder = Statement.Builder.class)
 public class Statement {
     @JsonProperty("Action")
-    private String action;
+    private String Action;
     @JsonProperty("Effect")
-    private String effect;
+    private String Effect;
     @JsonProperty("Resource")
-    private String resource;
+    private String Resource;
 
     private Statement(Builder builder) {
-        this.action = builder.action;
-        this.effect = builder.effect;
-        this.resource = builder.resource;
+        this.Action = builder.action;
+        this.Effect = builder.effect;
+        this.Resource = builder.resource;
     }
 
 

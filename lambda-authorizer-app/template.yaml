@@ -23,11 +23,11 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            Location: open-api.yaml
+      Auth:
+        DefaultAuthorizer: LambdaAuth
+        Authorizers:
+          LambdaAuth:
+            FunctionArn: !GetAtt LambdaAuthorizerFunction
 
   LambdaAuthorizerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -46,8 +46,7 @@ Resources:
           Properties:
             Path: /users/{username}
             Method: get
-            RestApiId:
-              Ref: AppRestAPI
+            RestApiId: !Ref AppRestAPI
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

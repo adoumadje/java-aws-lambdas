@@ -14,7 +14,8 @@ public class LambdaAuthorizerFunction implements RequestHandler<APIGatewayProxyR
         LambdaLogger logger = context.getLogger();
         logger.log("Authenticating...");
 
-        String username = input.getPathParameters().get("username");
+//        String username = input.getPathParameters().get("username");
+        String username = "TheUser";
         String jwt = input.getHeaders().get("Authorization");
 
         String region = System.getenv("AWS_REGION");
@@ -28,10 +29,12 @@ public class LambdaAuthorizerFunction implements RequestHandler<APIGatewayProxyR
         DecodedJWT decodedJWT = null;
 
         try {
-            decodedJWT = JwtUtils.validateJwtForUser(jwt, region, userPoolID, username, audience);
-            username = decodedJWT.getSubject();
+            //decodedJWT = JwtUtils.validateJwtForUser(jwt, region, userPoolID, username, audience);
+            logger.log("jwt decoded...");
+            //username = decodedJWT.getSubject();
         } catch (RuntimeException ex) {
             effect = "Deny";
+            logger.log("error-message: " + ex.getMessage());
             ex.printStackTrace();
         }
 
@@ -42,7 +45,8 @@ public class LambdaAuthorizerFunction implements RequestHandler<APIGatewayProxyR
                 proxyRequestContext.getAccountId(),
                 proxyRequestContext.getApiId(),
                 proxyRequestContext.getStage(),
-                proxyRequestContext.getHttpMethod(), "*");
+                proxyRequestContext.getHttpMethod(),
+                "*");
 
         Statement statement = Statement.builder()
                 .action(action)

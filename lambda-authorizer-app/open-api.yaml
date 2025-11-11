@@ -17,11 +17,11 @@ paths:
         type: "string"
       - name: "Authorization"
         in: "header"
-        required: true
+        required: false
         type: "string"
       responses: {}
       security:
-      - LambdaAuthorizer: []
+      - LambdaAuth: []
       x-amazon-apigateway-request-validator: "Validate query string parameters and\
         \ headers"
       x-amazon-apigateway-integration:
@@ -30,14 +30,14 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "aws_proxy"
 securityDefinitions:
-  LambdaAuthorizer:
+  LambdaAuth:
     type: "apiKey"
     name: "Authorization"
     in: "header"
     x-amazon-apigateway-authtype: "custom"
     x-amazon-apigateway-authorizer:
       authorizerUri: "arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-north-1:590183762752:function:lambda-authorizer-app-LambdaAuthorizerFunction-UkKZkfpwdJEc/invocations"
-      authorizerResultTtlInSeconds: 300
+      authorizerResultTtlInSeconds: 0
       type: "token"
 x-amazon-apigateway-request-validators:
   Validate query string parameters and headers:
